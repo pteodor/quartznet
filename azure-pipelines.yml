@@ -8,9 +8,19 @@ trigger:
 
 pool: Default
 
+parameters:
+  - name: severity
+    displayName: Define severity (warning/error)
+    type: string
+    default: 'error'
+    values:
+      - error
+      - warning
+
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- script:
+      '"C:\Program Files\Parasoft\dotTEST\2023.2\dottest\dottestcli.exe" -solution Quartz.sln'
+  displayName: 'Run dotTest analysis'
 
 - script: |
     echo Add other tasks to build, test, and deploy your project.

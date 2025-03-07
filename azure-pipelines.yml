@@ -21,7 +21,19 @@ steps:
 - script:
       '"C:\Program Files\Parasoft\dotTEST\2023.2\dottest\dottestcli.exe" -solution Quartz.sln'
   displayName: 'Run dotTest analysis'
-
+- task: PublishParasoftResults@1
+  inputs:
+    resultsFiles: |
+      **/rep*.xml
+      **/rep*.sarif
+      **/coverage.xml
+    parasoftToolOrJavaRootPath: 'C:\Program Files\Parasoft\dotTEST\2023.2\dottest'
+- task: ParasoftStaticAnalysisQualityGate@1
+  inputs:
+    type: 'total'
+    severity: '${{ parameters.severity }}'
+    threshold: '300'
+    buildStatus: 'failed'
 - script: |
     echo Add other tasks to build, test, and deploy your project.
     echo See https://aka.ms/yaml

@@ -19,7 +19,7 @@ parameters:
 
 steps:
 - script:
-      '"C:\Program Files\Parasoft\dotTEST\2023.2\dottest\dottestcli.exe" -solution Quartz.sln'
+      '"C:\Program Files\Parasoft\dotTEST\2023.2\dottest\dottestcli.exe" -solution Quartz.sln -config "builtin://OWASP Top 10-2021"'
   displayName: 'Run dotTest analysis'
 
 - script:

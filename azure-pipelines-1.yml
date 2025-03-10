@@ -3,8 +3,7 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger:
-- main
+trigger: none
 
 pool: Default
 
@@ -29,6 +28,10 @@ steps:
 - script:
       '"C:\Parasoft\MLP\2024.2\multilanguage-pack.bat" -tool sonarqube -source.dir "C:\home\demo_apps\quartznet" -settings "C:\Parasoft\MLP\2024.2\settings_sq.properties"'
   displayName: 'Collect SQ results'
+
+- script:
+      'cp "C:\Parasoft\MLP\2024.2\reports\sonarqube\report.xml" "C:\home\azure\agents\windows\_work\15\s\reports\report_js.xml"'
+  displayName: 'Copy JSHint reports into workspace'
 - task: PublishParasoftResults@1
   inputs:
     resultsFiles: |

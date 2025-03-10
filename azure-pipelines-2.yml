@@ -1,0 +1,48 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool: Default
+
+parameters:
+  - name: severity
+    displayName: Define severity (warning/error)
+    type: string
+    default: 'error'
+    values:
+      - error
+      - warning
+
+steps:
+- script:
+      '"C:\Program Files\Parasoft\dotTEST\2023.2\dottest\dottestcli.exe" -solution Quartz.sln -config "builtin://OWASP Top 10-2021"'
+  displayName: 'Run dotTest analysis'
+
+- script:
+      'sonar-scanner.bat -D"sonar.projectKey=QuartzNetProject" -D"sonar.sources=." -D"sonar.host.url=http://localhost:9000" -D"sonar.login=sqp_287852e4c5450f348d89291dd0d0b7b97fa8a1b0" -D"sonar.exclusions=**/*.cs,**/*.html""'
+  displayName: 'Run SQ analysis'
+
+- script:
+      '"C:\Parasoft\MLP\2024.2\multilanguage-pack.bat" -tool sonarqube -source.dir "C:\home\demo_apps\quartznet"'
+  displayName: 'Collect SQ results'
+- task: PublishParasoftResults@1
+  inputs:
+    resultsFiles: |
+      **/rep*.xml
+      **/rep*.sarif
+      **/coverage.xml
+    parasoftToolOrJavaRootPath: 'C:\Program Files\Parasoft\dotTEST\2023.2\dottest'
+- task: ParasoftStaticAnalysisQualityGate@1
+  inputs:
+    type: 'total'
+    severity: '${{ parameters.severity }}'
+    threshold: '300'
+    buildStatus: 'failed'
+- script: |
+    echo Add other tasks to build, test, and deploy your project.
+    echo See https://aka.ms/yaml
+  displayName: 'Run a multi-line script'

@@ -19,7 +19,7 @@ parameters:
 
 steps:
 - script:
-      '"C:\Program Files\Parasoft\dotTEST\2023.2\dottest\dottestcli.exe" -solution Quartz.sln -config "builtin://OWASP Top 10-2021"'
+      '"C:\Program Files\Parasoft\dotTEST\2023.2\dottest\dottestcli.exe" -solution Quartz.sln -config "builtin://OWASP Top 10-2021" -settings "C:\Parasoft\MLP\2024.2\settings_sq.properties"'
   displayName: 'Run dotTest analysis'
 
 - script:
@@ -27,7 +27,7 @@ steps:
   displayName: 'Run SQ analysis'
 
 - script:
-      '"C:\Parasoft\MLP\2024.2\multilanguage-pack.bat" -tool sonarqube -source.dir "C:\home\demo_apps\quartznet"'
+      '"C:\Parasoft\MLP\2024.2\multilanguage-pack.bat" -tool sonarqube -source.dir "C:\home\demo_apps\quartznet" -settings "C:\Parasoft\MLP\2024.2\settings_sq.properties"'
   displayName: 'Collect SQ results'
 - task: PublishParasoftResults@1
   inputs:

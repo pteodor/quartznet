@@ -19,16 +19,16 @@ parameters:
 
 steps:
 - script:
-      '"C:\Program Files\Parasoft\dotTEST\2023.2\dottest\dottestcli.exe" -solution Quartz.sln -config "builtin://OWASP Top 10-2021"'
+      '"C:\Program Files\Parasoft\dotTEST\2023.2\dottest\dottestcli.exe" -solution Quartz.sln -config "builtin://OWASP Top 10-2021" -settings "C:\Parasoft\MLP\2024.2\settings_jshint.properties"'
   displayName: 'Run dotTest analysis'
 
 - script:
-      'sonar-scanner.bat -D"sonar.projectKey=QuartzNetProject" -D"sonar.sources=." -D"sonar.host.url=http://localhost:9000" -D"sonar.login=sqp_287852e4c5450f348d89291dd0d0b7b97fa8a1b0" -D"sonar.exclusions=**/*.cs,**/*.html""'
-  displayName: 'Run SQ analysis'
+      'jshint src --reporter=checkstyle > report.xml'
+  displayName: 'Run JSHint analysis'
 
 - script:
-      '"C:\Parasoft\MLP\2024.2\multilanguage-pack.bat" -tool sonarqube -source.dir "C:\home\demo_apps\quartznet"'
-  displayName: 'Collect SQ results'
+      '"C:\Parasoft\MLP\2024.2\multilanguage-pack.bat" -tool jshint -source.dir "C:\home\demo_apps\quartznet" -results.file "C:\home\demo_apps\quartznet\report.xml" -settings "C:\Parasoft\MLP\2024.2\settings_jshint.properties"'
+  displayName: 'Collect JSHint results'
 - task: PublishParasoftResults@1
   inputs:
     resultsFiles: |
